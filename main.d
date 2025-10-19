@@ -1,23 +1,26 @@
-/// Simple example of a GLFW application that opens a window and draws a colored triangle
-module app;
-
-import glfw3.api;
 import bindbc.opengl;
+import bindbc.glfw;
 
 import glfw3_imgui_bindings;
 
 import importc_cimgui;
 
-version (linux) {
-	pragma(lib, "libcimgui.a");
-	pragma(lib, "libimgui.a");
-}
+import std.stdio;
 
 int main() {
+
 	GLFWwindow* window;
-	glfwSetErrorCallback(&errorCallback);
-	if (!glfwInit())
+	GLFWSupport retGLFW = loadGLFW();
+	if (retGLFW != glfwSupport) {
+		writeln("gflw failed to load");
 		return 1;
+	}
+
+	glfwSetErrorCallback(&errorCallback);
+	if (!glfwInit()) {
+		writeln("gflw failed to init");
+		return 1;
+	}
 	scope (exit)
 		glfwTerminate();
 
@@ -26,15 +29,20 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	window = glfwCreateWindow(800, 600, "cimgui Hello", null, null);
-	scope (exit)
+	scope (exit) {
 		glfwDestroyWindow(window);
-	if (!window)
+	}
+	if (!window) {
+		writeln("create window failed");
+
 		return 1;
+	}
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1); // vsync
 
-	GLSupport retVal = loadOpenGL();
-	if (retVal == GLSupport.badLibrary || retVal == GLSupport.noLibrary) {
+	GLSupport retGL = loadOpenGL();
+	if (retGL == GLSupport.badLibrary || retGL == GLSupport.noLibrary) {
+		writeln("load openGL failed");
 		return -1;
 	}
 
@@ -42,21 +50,21 @@ int main() {
 	ImGuiContext* ctx = igCreateContext(null);
 	ImGuiIO* io = igGetIO_ContextPtr(ctx);
 	cast(void) io;
-	scope (exit)
+	scope (exit) {
 		igDestroyContext(ctx);
-
+	}
 	// Style first (optional)
 	igStyleColorsDark(null);
 
 	// Backend init AFTER context exists
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	scope (exit)
+	scope (exit) {
 		ImGui_ImplGlfw_Shutdown();
-
+	}
 	ImGui_ImplOpenGL3_Init("#version 330");
-	scope (exit)
+	scope (exit) {
 		ImGui_ImplOpenGL3_Shutdown();
-
+	}
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();

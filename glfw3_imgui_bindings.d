@@ -1,6 +1,7 @@
 module glfw3_imgui_bindings;
 
-import glfw3.api;
+import bindbc.glfw;
+
 import importc_cimgui;
 
 nothrow @nogc extern (C++) {

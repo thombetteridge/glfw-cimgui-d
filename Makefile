@@ -1,14 +1,10 @@
 
-
 # --- d target
 TARGET = main
 DC = dmd
-VERSION = -version=GL_33
 DCFLAGS = -i -m64 -O -g
-INC = glfw3/package.d
 SRC = *.d
-LIBS = -L-lGL -L-ldl -L-lpthread -L-lstdc++
-
+LIBS = -L-lGL -L-ldl -L-lpthread -L-lstdc++ -L-lglfw
 
 # ---- imgui libs
 IMGUI_DIR   := cimgui/imgui
@@ -22,8 +18,7 @@ IMGUI_CORE_CPP := \
   $(IMGUI_DIR)/imgui_draw.cpp \
   $(IMGUI_DIR)/imgui_tables.cpp \
   $(IMGUI_DIR)/imgui_widgets.cpp \
-  $(IMGUI_DIR)/imgui_demo.cpp \
-  $(IMGUI_DIR)/imgui_glue.cpp
+  $(IMGUI_DIR)/imgui_demo.cpp 
 
 IMGUI_BACKENDS_CPP := \
   $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
@@ -42,7 +37,7 @@ CIMGUI_OBJS = $(CIMGUI_CPP:.cpp=.o)
 all: $(TARGET)
 
 $(TARGET): $(SRC) $(IMGUI_LIB) $(CIMGUI_LIB)
-	$(DC) $(VERSION) $(DCFLAGS) main.d -of=$(TARGET) $(INC) $(LIBS)
+	$(DC) $(VERSION) $(DCFLAGS) main.d -of=$(TARGET) -L$(CIMGUI_LIB) -L$(IMGUI_LIB)  $(LIBS) 
 
 $(CIMGUI_LIB): $(CIMGUI_OBJS)
 	$(AR) rcs $@ $^
@@ -61,7 +56,5 @@ $(CIMGUI_OBJS): %.o: %.cpp
 clean_libs:
 	rm -f $(IMGUI_OBJS) $(CIMGUI_OBJS) $(IMGUI_LIB) $(CIMGUI_LIB)
 
-
-
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) *.o
