@@ -8,7 +8,6 @@ import importc_cimgui;
 import std.stdio;
 
 int main() {
-
 	GLFWwindow* window;
 	GLFWSupport retGLFW = loadGLFW();
 	if (retGLFW != glfwSupport) {
@@ -34,7 +33,6 @@ int main() {
 	}
 	if (!window) {
 		writeln("create window failed");
-
 		return 1;
 	}
 	glfwMakeContextCurrent(window);
@@ -49,6 +47,8 @@ int main() {
 	// --- ImGui: create context BEFORE backend init ---
 	ImGuiContext* ctx = igCreateContext(null);
 	ImGuiIO* io = igGetIO_ContextPtr(ctx);
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 	cast(void) io;
 	scope (exit) {
 		igDestroyContext(ctx);

@@ -14,19 +14,19 @@ IMGUI_LIB = libimgui.a
 CIMGUI_LIB = libcimgui.a
 
 IMGUI_CORE_CPP := \
-  $(IMGUI_DIR)/imgui.cpp \
-  $(IMGUI_DIR)/imgui_draw.cpp \
-  $(IMGUI_DIR)/imgui_tables.cpp \
-  $(IMGUI_DIR)/imgui_widgets.cpp \
-  $(IMGUI_DIR)/imgui_demo.cpp 
+	$(IMGUI_DIR)/imgui.cpp \
+	$(IMGUI_DIR)/imgui_draw.cpp \
+	$(IMGUI_DIR)/imgui_tables.cpp \
+	$(IMGUI_DIR)/imgui_widgets.cpp \
+	$(IMGUI_DIR)/imgui_demo.cpp 
 
 IMGUI_BACKENDS_CPP := \
-  $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
-  $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+	$(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
+	$(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 
 CIMGUI_CPP := \
-  $(CIMGUI_DIR)/cimgui.cpp \
-  $(CIMGUI_DIR)/cimgui_impl.cpp 
+	$(CIMGUI_DIR)/cimgui.cpp \
+	$(CIMGUI_DIR)/cimgui_impl.cpp 
 
 
 CXXFLAGS += -std=c++17 -O2 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(CIMGUI_DIR) `pkg-config --cflags glfw3`
@@ -52,6 +52,8 @@ $(IMGUI_OBJS): %.o: %.cpp
 $(CIMGUI_OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@ $(CXXFLAGS)
 
+run: $(TARGET)
+	./$(TARGET)
 
 clean_libs:
 	rm -f $(IMGUI_OBJS) $(CIMGUI_OBJS) $(IMGUI_LIB) $(CIMGUI_LIB)
